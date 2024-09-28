@@ -29,7 +29,7 @@ const Header = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
           <Button variant="ghost" asChild>
             <Link to="/sign-in">Sign In</Link>
           </Button>
-          <Button asChild className={isDark ? "bg-white text-black" : "bg-black text-white"}>
+          <Button asChild variant={`${isDark ? 'secondary' : "default"}`}>
             <Link to="/sign-up">Sign Up</Link>
           </Button>
         </div>
