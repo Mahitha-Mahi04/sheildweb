@@ -4,7 +4,9 @@ import cookieParser from "cookie-parser";
 import userRoutes from './routes/user.route.js';
 import adminRoutes from './routes/admin.route.js';
 import authRoutes from './routes/auth.route.js';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 const port = 3000;
 
@@ -12,8 +14,7 @@ app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 
-
-mongoose.connect('mongodb+srv://shield:aaam@shieldweb.ha8dk.mongodb.net/?retryWrites=true&w=majority&appName=shieldweb').then(() => {
+mongoose.connect(process.env.MONGO).then(() => {
 	console.log('MongoDB Connected!');
 });
 
