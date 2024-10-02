@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Link, useNavigate } from 'react-router-dom'
 import Header from '@/components/Header'
+import { UserContext } from '@/context/userContext'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -12,6 +13,13 @@ export default function LoginPage() {
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
+  const userContext = useContext(UserContext);
+
+  if(!userContext){
+    throw new Error('User must be used under userContext')
+  }
+
+  const {login} = userContext;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,8 +45,9 @@ export default function LoginPage() {
       const data = await response.json();
       setMessage(data.message);
       setIsSuccess(true);
+      login(data.user);
       setTimeout(() => {
-        navigate('/');
+        navigate('/home');
       }, 3000);
     } catch (error) {
       console.error('Sign-in failed:', error);

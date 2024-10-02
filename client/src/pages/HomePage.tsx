@@ -27,7 +27,7 @@ const HomePage = () => {
           Safeguard your data by identifying spam emails and harmful links
           instantly with our advanced scanning technology.
         </p>
-        <Link to={"/sign-in"}>
+        <Link to={"/home"}>
           <Button variant={"outline"}>Get Started</Button>
         </Link>
       </div>
