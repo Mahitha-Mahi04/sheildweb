@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import Header from '@/components/Header';
+import Layout from '@/components/Layout';
 
 export default function SignUpPage() {
     const [name, setName] = useState('');
@@ -50,8 +51,7 @@ export default function SignUpPage() {
     };
 
     return (
-        <div className="bg-gray-100 overflow-hidden">
-            <Header />
+        <Layout>
             <section className='w-screen h-[calc(100vh-4rem)] flex justify-center items-center'>
                 <Card className="w-full max-w-sm">
                     <CardHeader>
@@ -102,6 +102,6 @@ export default function SignUpPage() {
                     </form>
                 </Card>
             </section>
-        </div>
+        </Layout>
     );
 }

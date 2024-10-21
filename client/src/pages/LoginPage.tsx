@@ -1,36 +1,43 @@
-import { useContext, useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Link, useNavigate } from 'react-router-dom'
-import Header from '@/components/Header'
-import { UserContext } from '@/context/userContext'
+import { useContext, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Link, useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
+import { UserContext } from "@/context/userContext";
+import Layout from "@/components/Layout";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
 
-  if(!userContext){
-    throw new Error('User must be used under userContext')
+  if (!userContext) {
+    throw new Error("User must be used under userContext");
   }
 
-  const {login} = userContext;
+  const { login } = userContext;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      setMessage('');
+      setMessage("");
 
-      const response = await fetch('/api/auth/user/sign-in', {
-        method: 'POST',
+      const response = await fetch("/api/auth/user/sign-in", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
@@ -47,20 +54,21 @@ export default function LoginPage() {
       setIsSuccess(true);
       login(data.user);
       setTimeout(() => {
-        navigate('/home');
+        navigate("/home");
       }, 3000);
     } catch (error) {
-      console.error('Sign-in failed:', error);
+      console.error("Sign-in failed:", error);
     }
   };
 
   return (
-    <div className="bg-gray-100 overflow-x-hidden">
-      <Header />
-      <section className='w-screen h-[calc(100vh-4rem)] flex justify-center items-center'>
+    <Layout>
+      <section className="w-screen h-[calc(100vh-4rem)] flex justify-center items-center">
         <Card className=" mx-auto w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">
+              Welcome Back
+            </CardTitle>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
@@ -87,18 +95,29 @@ export default function LoginPage() {
                 />
               </div>
             </CardContent>
-            <CardFooter className='flex flex-col gap-3'>
+            <CardFooter className="flex flex-col gap-3">
               <Button type="submit" className="w-full">
                 Log In
               </Button>
-              <span className="text-center">Don't have an account? <Link to={"/sign-up"} className="font-semibold text-blue-600">Sign Up</Link></span>
+              <span className="text-center">
+                Don't have an account?{" "}
+                <Link to={"/sign-up"} className="font-semibold text-blue-600">
+                  Sign Up
+                </Link>
+              </span>
               {message && (
-                <span className={`${isSuccess ? 'bg-green-600' : 'bg-red-600'} 'w-80 mx-auto px-8 py-4 rounded-lg shadow-lg'`}>{message}</span>
+                <span
+                  className={`${
+                    isSuccess ? "bg-green-600" : "bg-red-600"
+                  } 'w-80 mx-auto px-8 py-4 rounded-lg shadow-lg'`}
+                >
+                  {message}
+                </span>
               )}
             </CardFooter>
           </form>
         </Card>
       </section>
-    </div>
-  )
+    </Layout>
+  );
 }
