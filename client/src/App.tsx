@@ -6,6 +6,8 @@ import MainPage from "./pages/MainPage";
 import URLSpamDetection from "./pages/UrlSpanDetectionPage";
 import { UserProvider } from "./context/userContext";
 import PrivateRoute from "./components/PrivateRoute";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 
 const App = () => {
   return (
@@ -17,7 +19,9 @@ const App = () => {
         </Route>
         <Route path="/" element={<HomePage />} />
         <Route path="/sign-in" element={<LoginPage />} />
-        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/sign-up" element={<SignUpPage />} />  
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </UserProvider>
   );
