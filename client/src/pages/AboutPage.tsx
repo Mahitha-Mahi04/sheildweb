@@ -1,26 +1,22 @@
+import Layout from "@/components/Layout"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ShieldCheck, Link, Mail, AlertTriangle } from "lucide-react"
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">About Shield Web</h1>
-        <p className="text-xl text-muted-foreground">Your first line of defense against online threats</p>
-      </header>
-
-      <main className="space-y-12">
-        <section>
-          <h2 className="text-2xl font-semibold mb-6">What We Do</h2>
-          <p className="text-lg mb-4">
+    <Layout>
+      <section className="my-14 p-10">
+        <div>
+          <h2 className="text-2xl text-center font-semibold mb-6">What We Do</h2>
+          <p className="text-lg mb-4 text-center">
             Shield Web is a cutting-edge web application designed to protect you from various online threats. 
             Our advanced algorithms work tirelessly to detect and flag potentially harmful content, keeping you safe online.
           </p>
-        </section>
+        </div>
 
-        <section>
-          <h2 className="text-2xl font-semibold mb-6">Our Features</h2>
+        <div>
+          <h2 className="text-2xl font-semibold mb-6 text-center">Our Features</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
@@ -56,9 +52,9 @@ export default function AboutPage() {
               </CardContent>
             </Card>
           </div>
-        </section>
+        </div>
 
-        <section className="text-center">
+        <div className="text-center mt-5">
           <h2 className="text-2xl font-semibold mb-6">Why Choose Shield Web?</h2>
           <p className="text-lg mb-6">
             With the increasing sophistication of online threats, it's crucial to have a reliable defense mechanism. 
@@ -68,8 +64,8 @@ export default function AboutPage() {
             <ShieldCheck className="mr-2" />
             Start Protecting Yourself Now
           </Button>
-        </section>
-      </main>
-    </div>
+        </div>
+      </section>
+    </Layout>
   )
 }
