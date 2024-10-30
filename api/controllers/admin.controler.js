@@ -46,7 +46,7 @@ export const feedbacks = async (req, res) => {
   }
 
   try {
-    const feedbacks = await Feedback.find().sort({ updatedAt: -1 });
+    let feedbacks = await Feedback.find().sort({ updatedAt: -1 }).populate("user", "name");
     return res
       .status(200)
       .json({ success: true, totalFeedbacks: feedbacks.length, feedbacks });
