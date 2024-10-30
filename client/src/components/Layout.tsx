@@ -2,11 +2,11 @@ import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children, className }: { children: React.ReactNode, className?: string  }) => {
   return (
     <section className="w-screen flex flex-col overflow-x-hidden">
       <Header />
-      <main className="flex items-center justify-center w-full h-[calc(100vh-4rem)]">{children}</main>
+      <main className={`${className} flex w-full h-[calc(100vh-4rem)] px-4`}>{children}</main>
       <Footer />
     </section>
   );

@@ -28,7 +28,7 @@ const HomePage = () => {
           instantly with our advanced scanning technology.
         </p>
         <Link to={"/home"}>
-          <Button variant={"outline"}>Get Started</Button>
+          <Button variant={"default"}>Get Started</Button>
         </Link>
       </div>
     </main>

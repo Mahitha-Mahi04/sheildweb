@@ -8,6 +8,9 @@ import { UserProvider } from "./context/userContext";
 import PrivateRoute from "./components/PrivateRoute";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import History from "./pages/History";
+import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   return (
@@ -15,11 +18,15 @@ const App = () => {
       <Routes>
         <Route element={<PrivateRoute />}>
           <Route path="/home" element={<MainPage />} />
+          <Route path="/history" element={<History />} />
           <Route path="/url-spam-detection" element={<URLSpamDetection />} />
+        </Route>
+        <Route element={<OnlyAdminPrivateRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
         <Route path="/" element={<HomePage />} />
         <Route path="/sign-in" element={<LoginPage />} />
-        <Route path="/sign-up" element={<SignUpPage />} />  
+        <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>

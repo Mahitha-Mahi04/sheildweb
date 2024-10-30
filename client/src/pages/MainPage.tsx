@@ -6,8 +6,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { ShieldCheck, Mail, Search, OctagonAlert, Bell } from "lucide-react";
-import Header from "@/components/Header";
 import Layout from "@/components/Layout";
+import { Button } from "@/components/ui/button";
 
 export default function MainPage() {
   const features = [
@@ -99,19 +99,23 @@ export default function MainPage() {
   ];
 
   return (
-    <Layout>
-      <section className="container mx-auto px-4 py-8">
-        <div className="flex gap-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <Layout className="gap-4">
+      <div className="w-3/4 container">
+        <div className="flex h-full justify-center items-center flex-col gap-5">
+          <h2 className="text-4xl font-semibold my-2">
+          Your <span className="text-blue-500">Digital Shield</span> Against Spam and Scams
+          </h2>
+          <p className="text-muted-foreground">Stay secure online with comprehensive tools for phishing, spam detection, and SEO analysis.</p>
+          <div className="grid grid-cols-3 md:grid-cols-2 gap-6">
             {features.map((feature, index) => (
               <Link
                 key={index}
                 to={feature.href}
                 className="block hover:no-underline"
               >
-                <Card className="h-full transition-shadow hover:shadow-lg">
+                <Card className="h-full transition-shadow hover:shadow-lg border-blue-500">
                   <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-2 text-blue-500">
                       <CardTitle className="text-xl mr-2">
                         {feature.title}
                       </CardTitle>
@@ -123,28 +127,31 @@ export default function MainPage() {
               </Link>
             ))}
           </div>
-          <div className="w-1/3 h-72 border rounded-xl shadow-xl flex flex-col overflow-x-hidden overflow-y-scroll ">
-            <h2 className=" bg-black text-white p-4 flex justify-between font-bold text-xl">
-              Notifications{" "}
-              <span className="my-auto">
-                <Bell />
-              </span>
-            </h2>
-            <hr />
-            <div className="flex flex-col gap-2 my-3">
-              {notifications &&
-                notifications.map(({ message, timestamp }) => (
-                  <div className="w-11/12 mx-auto h-fit border rounded-md shadow-md flex flex-col">
-                    <span className="text-sm pt-1 pl-1">
-                      {timestamp.toDateString()}
-                    </span>
-                    <p className="font-semibold px-2 py-1">{message}</p>
-                  </div>
-                ))}
-            </div>
-          </div>
         </div>
-      </section>
+      </div>
+      <div className="w-1/3 h-full border rounded-xl shadow-xl flex flex-col overflow-x-hidden overflow-y-scroll">
+        <h2 className="sticky top-0 bg-blue-500 text-white p-4 flex justify-between font-bold text-xl">
+          Notifications{" "}
+          <span className="my-auto">
+            <Bell />
+          </span>
+        </h2>
+        <hr />
+        <div className="flex flex-col gap-2 my-3">
+          {notifications &&
+            notifications.map(({ message, timestamp }) => (
+              <div className="w-11/12 mx-auto h-fit border rounded-md shadow-md flex flex-col">
+                <span className="text-sm pt-1 pl-1">
+                  {timestamp.toDateString()}
+                </span>
+                <p className="font-semibold px-2 py-1">{message}</p>
+              </div>
+            ))}
+        </div>
+        <div className="flex items-center justify-center py-3">
+          <Button className="">Mark All As Read</Button>
+        </div>
+      </div>
     </Layout>
   );
 }

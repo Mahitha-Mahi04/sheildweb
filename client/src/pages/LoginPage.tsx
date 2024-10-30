@@ -34,7 +34,7 @@ export default function LoginPage() {
     try {
       setMessage("");
 
-      const response = await fetch("/api/auth/user/sign-in", {
+      const response = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,9 +53,15 @@ export default function LoginPage() {
       setMessage(data.message);
       setIsSuccess(true);
       login(data.user);
-      setTimeout(() => {
-        navigate("/home");
-      }, 3000);
+      if (data.user.isAdmin) {
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 3000);
+      } else {
+        setTimeout(() => {
+          navigate("/home");
+        }, 3000);
+      }
     } catch (error) {
       console.error("Sign-in failed:", error);
     }
@@ -106,13 +112,13 @@ export default function LoginPage() {
                 </Link>
               </span>
               {message && (
-                <span
+                <div
                   className={`${
-                    isSuccess ? "bg-green-600" : "bg-red-600"
-                  } 'w-80 mx-auto px-8 py-4 rounded-lg shadow-lg'`}
+                    isSuccess ? "text-green-600" : "text-red-600"
+                  } font-semibold`}
                 >
                   {message}
-                </span>
+                </div>
               )}
             </CardFooter>
           </form>

@@ -1,6 +1,6 @@
-import path from "path"
-import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
+import path from "path";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
@@ -12,9 +12,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
-        secure: false
+        target: 'http://localhost:3000', // Proxy for local API
+        secure: false,
+        changeOrigin: true
+      },
+      '/check-url': {
+        target: 'https://linkshieldapi.com', // Proxy for external API
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/check-url/, '/api/v1/link/score') // Rewrite to match external API path
       },
     },
   },
-})
+});

@@ -9,9 +9,10 @@ import {
 
 // Define the shape of the user data
 interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
+  isAdmin?: boolean;
 }
 
 // Define the context's shape
