@@ -26,7 +26,7 @@ const Header = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
         isDark ? "text-white" : "text-black"
       } bg-transparent z-20 relative`}
     >
-      <div className="container mx-auto h-full flex items-center justify-between">
+      <div className="border-b container mx-auto h-full flex items-center justify-between">
         <Link to="/" className="text-2xl font-semibold text-blue-500">
           Shield Web
         </Link>

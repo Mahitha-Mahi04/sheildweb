@@ -11,6 +11,8 @@ import ContactPage from "./pages/ContactPage";
 import History from "./pages/History";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import Dashboard from "./pages/Dashboard";
+import { Toaster } from "./components/ui/toaster";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   return (
@@ -30,6 +32,8 @@ const App = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
+      <Toaster/>
+      <ScrollToTop/>
     </UserProvider>
   );
 };

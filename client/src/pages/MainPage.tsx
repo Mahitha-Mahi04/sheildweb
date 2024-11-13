@@ -5,11 +5,29 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { ShieldCheck, Mail, Search, OctagonAlert, Bell } from "lucide-react";
+import {
+  ShieldCheck,
+  Mail,
+  Search,
+  OctagonAlert,
+  Bell,
+  LoaderCircle,
+  Loader,
+} from "lucide-react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useUser } from "@/context/userContext";
+import { toast } from "@/hooks/use-toast";
 
 export default function MainPage() {
+  const { user } = useUser();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState<boolean | null>(null);
+  const [updatingStatus, setUpdatingStatus] = useState<{
+    [key: string]: boolean;
+  }>({}); // Track updating status per notification
+
   const features = [
     {
       title: "URL Spam Detection",
@@ -40,72 +58,105 @@ export default function MainPage() {
 
   // Define the notification structure
   interface Notification {
-    message: string;
-    timestamp: Date;
+    _id: string;
+    title: string;
+    content: string;
+    type: string;
+    createdAt: Date;
   }
 
-  // Create an array of 10 notifications with security-related messages
-  const notifications: Notification[] = [
-    {
-      message:
-        "Data breach alert: Major bank accounts compromised. Update your passwords now!",
-      timestamp: new Date("2024-10-02T09:00:00"),
-    },
-    {
-      message:
-        "New tips for secure browsing: Always check for HTTPS before entering sensitive information.",
-      timestamp: new Date("2024-10-01T17:30:00"),
-    },
-    {
-      message:
-        "Stay away from spam emails offering free gifts. They often contain malware links!",
-      timestamp: new Date("2024-09-30T11:45:00"),
-    },
-    {
-      message:
-        "Cybersecurity warning: Phishing campaign targeting e-commerce websites. Be cautious of unsolicited emails.",
-      timestamp: new Date("2024-09-29T08:00:00"),
-    },
-    {
-      message:
-        "Latest hack news: Social media platforms targeted by spam bots spreading fake news.",
-      timestamp: new Date("2024-09-28T12:15:00"),
-    },
-    {
-      message:
-        "Secure your accounts! New banking trojans detected in phishing emails. Double-check links before clicking.",
-      timestamp: new Date("2024-09-27T15:20:00"),
-    },
-    {
-      message:
-        "Tech tip: Enable two-factor authentication (2FA) to add an extra layer of security to your accounts.",
-      timestamp: new Date("2024-09-26T10:05:00"),
-    },
-    {
-      message:
-        "New feature: Enhanced phishing detection engine now live. Stay protected from fake emails.",
-      timestamp: new Date("2024-09-25T14:35:00"),
-    },
-    {
-      message:
-        "Warning: Recent surge in crypto exchange hacks. Avoid clicking links in suspicious emails.",
-      timestamp: new Date("2024-09-24T19:10:00"),
-    },
-    {
-      message:
-        "Guide: How to recognize a phishing email. Look for misspellings, suspicious links, and fake logos.",
-      timestamp: new Date("2024-09-23T08:50:00"),
-    },
-  ];
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/user/notifications?userId=${user?._id}`);
+        const data = await res.json();
+        if (!res.ok) {
+          toast({
+            title: "Notifications fetch error",
+            description: data.message || "Failed to fetch notifications",
+            variant: "destructive",
+          });
+          return;
+        }
+        setNotifications(data.notifications);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotifications();
+  }, []);
 
+  // Mark a single notification as read
+  const handleMarkAsRead = async (notificationId: string) => {
+    setUpdatingStatus((prev) => ({ ...prev, [notificationId]: true })); // Set loading for specific notification
+    try {
+      const res = await fetch(
+        `/api/user/update-notification-status?notificationId=${notificationId}&userId=${user?._id}`,
+        {
+          method: "PATCH",
+        }
+      );
+      if (!res.ok) {
+        const data = await res.json();
+        toast({
+          title: "Error",
+          description: data.message || "Failed to mark as read",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Update the notification in local state to avoid re-fetching
+      setNotifications((prev) =>
+        prev.filter((notification) => notification._id !== notificationId)
+      );
+
+      toast({ title: "Success", description: "Notification marked as read" });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setUpdatingStatus((prev) => ({ ...prev, [notificationId]: false })); // Reset loading for specific notification
+    }
+  };
+
+  // Mark all notifications as read
+  // const handleMarkAllAsRead = async () => {
+  //   try {
+  //     const res = await fetch(`/api/user/notifications/markAllAsRead?userId=${user?._id}`, {
+  //       method: "PATCH",
+  //     });
+  //     if (!res.ok) {
+  //       const data = await res.json();
+  //       toast({
+  //         title: "Error",
+  //         description: data.message || "Failed to mark all as read",
+  //         variant: "destructive",
+  //       });
+  //       return;
+  //     }
+
+  //     // Clear all notifications from local state
+  //     setNotifications([]);
+  //     toast({ title: "Success", description: "All notifications marked as read" });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   return (
     <Layout className="gap-4">
       <div className="w-3/4 container">
         <div className="flex h-full justify-center items-center flex-col gap-5">
           <h2 className="text-4xl font-semibold my-2">
-          Your <span className="text-blue-500">Digital Shield</span> Against Spam and Scams
+            Your <span className="text-blue-500">Digital Shield</span> Against
+            Spam and Scams
           </h2>
-          <p className="text-muted-foreground">Stay secure online with comprehensive tools for phishing, spam detection, and SEO analysis.</p>
+          <p className="text-muted-foreground">
+            Stay secure online with comprehensive tools for phishing, spam
+            detection, and SEO analysis.
+          </p>
           <div className="grid grid-cols-3 md:grid-cols-2 gap-6">
             {features.map((feature, index) => (
               <Link
@@ -132,24 +183,55 @@ export default function MainPage() {
       <div className="w-1/3 h-full border rounded-xl shadow-xl flex flex-col overflow-x-hidden overflow-y-scroll">
         <h2 className="sticky top-0 bg-blue-500 text-white p-4 flex justify-between font-bold text-xl">
           Notifications{" "}
-          <span className="my-auto">
+          <div className="relative my-auto">
             <Bell />
-          </span>
+            <span className="bg-white text-blue-600 rounded-full px-1 text-xs absolute -top-3 -right-1">
+              {notifications ? notifications.length : 0}
+            </span>
+          </div>
         </h2>
         <hr />
         <div className="flex flex-col gap-2 my-3">
-          {notifications &&
-            notifications.map(({ message, timestamp }) => (
-              <div className="w-11/12 mx-auto h-fit border rounded-md shadow-md flex flex-col">
-                <span className="text-sm pt-1 pl-1">
-                  {timestamp.toDateString()}
-                </span>
-                <p className="font-semibold px-2 py-1">{message}</p>
-              </div>
-            ))}
-        </div>
-        <div className="flex items-center justify-center py-3">
-          <Button className="">Mark All As Read</Button>
+          {loading ? (
+            <div className="size-full">
+              <LoaderCircle className="text-muted-foreground size-6 animate-spin" />
+            </div>
+          ) : notifications.length > 0 ? (
+            <div className="flex flex-col">
+              {notifications.map((notification) => (
+                <div key={notification._id} className="flex flex-col w-11/12 px-4 py-2 mx-auto border rounded-lg shadow-lg">
+                  <h3 className="border-b text-xl font-semibold">
+                    {notification.title}
+                  </h3>
+                  <p className="line-clamp-3 hover:line-clamp-none transition-transform duration-500">
+                    {notification.content}
+                  </p>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(notification.createdAt).toLocaleDateString()}
+                    </span>
+                    {updatingStatus[notification._id] ? (
+                      <Loader className="text-muted-foreground size-4 animate-spin" />
+                    ) : (
+                      <span
+                        onClick={() => handleMarkAsRead(notification._id)}
+                        className="text-xs text-muted-foreground font-semibold transition-all duration-300 hover:text-blue-600 cursor-pointer"
+                      >
+                        Mark As Read
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {/* <Button className="mx-auto my-3">Mark All As Read</Button> */}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center py-3">
+              <p className="text-xl text-center text-muted-foreground font-semibold">
+                No Notification are available!
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </Layout>

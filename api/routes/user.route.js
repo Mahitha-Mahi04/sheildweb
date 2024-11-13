@@ -1,11 +1,19 @@
 import express from "express";
 import { verifyToken } from "../utils/index.js";
-import { storeUrlResult, submitFeedback, urlChecks } from "../controllers/user.controler.js";
+import {
+  getUnreadNotifications,
+  markNotificationAsRead,
+  storeUrlResult,
+  submitFeedback,
+  urlChecks,
+} from "../controllers/user.controler.js";
 
-const app=express()
+const router = express();
 
-app.post('/submit-feedback', verifyToken, submitFeedback);
-app.post('/store-url-result', verifyToken, storeUrlResult);
-app.get('/url-checks', verifyToken, urlChecks);
+router.post("/submit-feedback", verifyToken, submitFeedback);
+router.post("/store-url-result", verifyToken, storeUrlResult);
+router.get("/url-checks", verifyToken, urlChecks);
+router.get("/notifications", verifyToken, getUnreadNotifications);
+router.patch("/update-notification-status", verifyToken, markNotificationAsRead);
 
-export default app;
+export default router;
