@@ -15,7 +15,6 @@ import {
   Loader,
 } from "lucide-react";
 import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useUser } from "@/context/userContext";
 import { toast } from "@/hooks/use-toast";
@@ -197,7 +196,7 @@ export default function MainPage() {
               <LoaderCircle className="text-muted-foreground size-6 animate-spin" />
             </div>
           ) : notifications.length > 0 ? (
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-3">
               {notifications.map((notification) => (
                 <div key={notification._id} className="flex flex-col w-11/12 px-4 py-2 mx-auto border rounded-lg shadow-lg">
                   <h3 className="border-b text-xl font-semibold">

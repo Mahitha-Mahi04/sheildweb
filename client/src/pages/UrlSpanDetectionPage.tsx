@@ -42,7 +42,7 @@ export default function URLSpamDetection() {
       // Fetch from the third-party API
       const res = await fetch("/check-url", {
         headers: {
-          Authorization: "Bearer nMVUHVjD7W86BOOaZ6jBpjjn4BWvQeUFc1HB7dGG",
+          Authorization: "Bearer RzPt7IPsqrNQnBTlCxnwjkoJaCycrVnrvn8U5tWG",
           "Content-Type": "application/json",
           Accept: "application/json",
         },

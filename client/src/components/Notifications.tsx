@@ -136,10 +136,10 @@ const Notifications = () => {
       ) : (
         <div className="w-1/2 flex flex-col">
           {notifications ? (
-            <div className="flex flex-col gap-4">
-              <h2 className="text-2xl font-semibold">Notifications</h2>
+            <div className="container mx-auto p-4">
+              <h1 className="text-2xl font-bold mb-6">Admin Notification</h1>
               {notifications.map((notification: Notification) => (
-                <Card key={notification._id}>
+                <Card key={notification._id} className="mb-5">
                   <CardHeader className="border-b">
                     <CardTitle className="text-xl font-semibold">
                       {notification.title}

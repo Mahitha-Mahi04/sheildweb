@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Users, Shield, LogOut, ChartPie, MessageSquare, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/userContext";
