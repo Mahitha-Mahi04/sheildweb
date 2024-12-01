@@ -1,6 +1,7 @@
 import express from "express";
 import { verifyToken } from "../utils/index.js";
 import {
+  getSpamDetection,
   getUnreadNotifications,
   markNotificationAsRead,
   storeUrlResult,
@@ -15,5 +16,6 @@ router.post("/store-url-result", verifyToken, storeUrlResult);
 router.get("/url-checks", verifyToken, urlChecks);
 router.get("/notifications", verifyToken, getUnreadNotifications);
 router.patch("/update-notification-status", verifyToken, markNotificationAsRead);
+router.post("/spam-detection", getSpamDetection);
 
 export default router;

@@ -44,14 +44,14 @@ export default function MainPage() {
       title: "Phishing Detection",
       description: "Protect against phishing attempts and scams",
       icon: <OctagonAlert className="h-6 w-6" />,
-      href: "/phishing-detection",
+      href: "#",
     },
     {
       title: "SEO Analysis of Website",
       description:
         "Evaluate and improve your website's search engine optimization",
       icon: <Search className="h-6 w-6" />,
-      href: "/seo-analysis",
+      href: "#",
     },
   ];
 

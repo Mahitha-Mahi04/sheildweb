@@ -22,11 +22,11 @@ const Header = ({ theme = "light" }: { theme?: "light" | "dark" }) => {
 
   return (
     <header
-      className={`w-full h-16 px-4 sm:px-6 lg:px-8 ${
+      className={`w-full h-16 p-4 sm:px-6 lg:px-8 border-b ${
         isDark ? "text-white" : "text-black"
       } bg-transparent z-20 relative`}
     >
-      <div className="border-b container mx-auto h-full flex items-center justify-between">
+      <div className="container mx-auto h-full flex items-center justify-between">
         <Link to="/" className="text-2xl font-semibold text-blue-500">
           Shield Web
         </Link>

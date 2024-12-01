@@ -19,6 +19,12 @@ export const signUp = async (req, res) => {
         .json({ success: false, message: "User already exist!" });
     }
 
+    if (password.length < 8) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Password must be at least 8 charecters long" });
+    }
+
     const hanshedPassword = bcrypt.hashSync(password, 10);
 
     const newUser = new User({
@@ -28,7 +34,7 @@ export const signUp = async (req, res) => {
     });
 
     await newUser.save();
-    return res.json({ success: true, message: "New user created!", newUser });
+    return res.json({ success: true, message: "Sign Up Success", newUser });
   } catch (error) {
     return res.status(400).json({ success: false, error: error.message });
   }

@@ -1,6 +1,9 @@
 import Feedback from "../models/feedback.model.js";
 import Notification from "../models/notification.model.js";
 import URLCheck from "../models/urlCheck.model.js";
+import natural from "natural";
+import { errorHandler } from "../utils/index.js";
+import { trainingData } from "../data/index.js";
 
 function standardizeFeedback(feedback) {
   // Trim leading/trailing spaces and replace multiple spaces with a single space
@@ -24,10 +27,16 @@ export const submitFeedback = async (req, res) => {
         .json({ success: false, message: "Feedback and rating is required!" });
     }
 
-    if (feedback.length < 5 || feedback.length > 100 || rating < 1 || rating > 5) {
+    if (
+      feedback.length < 5 ||
+      feedback.length > 100 ||
+      rating < 1 ||
+      rating > 5
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Feedback must between 5 and 30 charecters long, And Rating must between 1 and 5!",
+        message:
+          "Feedback must between 5 and 30 charecters long, And Rating must between 1 and 5!",
       });
     }
 
@@ -99,10 +108,12 @@ export const storeUrlResult = async (req, res) => {
 export const urlChecks = async (req, res) => {
   try {
     // Fetch all URLCheck documents for the requested user
-    const urlChecks = await URLCheck.find({ requested_user: req.user.id }).sort({updatedAt: -1});
+    const urlChecks = await URLCheck.find({ requested_user: req.user.id }).sort(
+      { updatedAt: -1 }
+    );
 
     if (!urlChecks.length) {
-      return res.json({ message: "No URL check results found for this user"});
+      return res.json({ message: "No URL check results found for this user" });
     }
 
     res.status(200).json(urlChecks);
@@ -111,7 +122,6 @@ export const urlChecks = async (req, res) => {
     res.status(500).json({ message: "Failed to retrieve URL check results" });
   }
 };
-
 
 // Get all unread notifications for a specific user
 export const getUnreadNotifications = async (req, res) => {
@@ -126,10 +136,11 @@ export const getUnreadNotifications = async (req, res) => {
     res.status(200).json({ success: true, notifications });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error fetching unread notifications" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching unread notifications" });
   }
 };
-
 
 // Mark a specific notification as read for a specific user
 export const markNotificationAsRead = async (req, res) => {
@@ -144,12 +155,73 @@ export const markNotificationAsRead = async (req, res) => {
 
     // Check if the notification was updated
     if (result.modifiedCount > 0) {
-      res.status(200).json({ success: true, message: "Notification marked as read" });
+      res
+        .status(200)
+        .json({ success: true, message: "Notification marked as read" });
     } else {
-      res.status(404).json({ success: false, message: "Notification not found or already read" });
+      res
+        .status(404)
+        .json({
+          success: false,
+          message: "Notification not found or already read",
+        });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error updating notification status" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error updating notification status" });
+  }
+};
+
+// Create and train the classifier
+const trainClassifier = () => {
+  const classifier = new natural.BayesClassifier();
+
+  trainingData.forEach(({ message, label }) => {
+    classifier.addDocument(message, label);
+  });
+
+  classifier.train();
+  return classifier;
+};
+
+const classifier = trainClassifier();
+
+// API handler for spam detection
+export const getSpamDetection = async (req, res, next) => {
+  try {
+    const { message } = req.body;
+
+    if (!message) {
+      return next(errorHandler(400, "Message is required!"));
+    }
+
+    // Classify the message
+    const classification = classifier.classify(message);
+
+    // Get raw confidence scores
+    const rawConfidences = classifier.getClassifications(message);
+
+    // Normalize confidence values to percentages
+    const totalConfidence = rawConfidences.reduce((acc, cur) => acc + cur.value, 0);
+
+    // Find the highest confidence and its label
+    const highestConfidence = rawConfidences
+      .map(({ label, value }) => ({
+        label,
+        value: ((value / totalConfidence) * 100).toFixed(2), // Convert to percentage
+      }))
+      .find(({ label }) => label === classification); // Return only the classified label
+
+    // Send the response
+    res.status(200).json({
+      success: true,
+      result: classification,
+      confidence: highestConfidence.value, // Only the highest confidence
+    });
+  } catch (error) {
+    console.error("Error in spam detection:", error);
+    return next(errorHandler(500, "Internal Server Error"));
   }
 };
