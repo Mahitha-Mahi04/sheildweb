@@ -47,7 +47,7 @@ const EmailSpamDetectionPage = () => {
 
   return (
     <Layout className='flex-col'>
-      <h1 className="text-center text-3xl font-bold my-4">Email Spam Detection</h1>
+      <h1 className="text-center text-3xl font-bold my-4">AI Email Spam Detection</h1>
       <p className="text-center text-gray-600 mb-6 max-w-2xl mx-auto">
         Paste your email content below to check if it's likely to be spam. Our advanced AI algorithm will analyze the text and provide a result along with a confidence score.
       </p>

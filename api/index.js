@@ -17,7 +17,7 @@ app.listen(port, () => {
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
-    console.log("MongoDB Connected!");
+    console.log("MongoDB Connected");
   })
   .catch((e) => {
     console.log("Mongo DB Error: " + e.message);

@@ -21,6 +21,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/check-url/, '/api/v1/link/score') // Rewrite to match external API path
       },
+      '/page-audit': {
+        target: 'https://on-page-seo-audit.p.rapidapi.com',
+        secure: true,
+        changeOrigin: true
+      },
     },
   },
 });

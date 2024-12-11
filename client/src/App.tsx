@@ -14,6 +14,8 @@ import Dashboard from "./pages/Dashboard";
 import { Toaster } from "./components/ui/toaster";
 import ScrollToTop from "./components/ScrollToTop";
 import EmailSpamDetectionPage from "./pages/EmailSpamDetectionPage";
+import PhishingLinkDetection from "./pages/PhishingLinkDetection";
+import SEOAnalysisPage from "./pages/SeoAnalysis";
 
 const App = () => {
   return (
@@ -23,7 +25,9 @@ const App = () => {
           <Route path="/home" element={<MainPage />} />
           <Route path="/history" element={<History />} />
           <Route path="/url-spam-detection" element={<URLSpamDetection />} />
+          <Route path="/phishing-link-detection" element={<PhishingLinkDetection />} />
           <Route path="/email-spam-detection" element={<EmailSpamDetectionPage />} />
+          <Route path="/seo-analysis" element={<SEOAnalysisPage />} />
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />

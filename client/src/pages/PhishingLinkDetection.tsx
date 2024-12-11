@@ -9,9 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Shield, CheckCircle, XCircle } from "lucide-react";
+import { Shield, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import Layout from "@/components/Layout";
-import { useUser } from "@/context/userContext";
 import { Link } from "react-router-dom";
 
 interface SecurityChecks {
@@ -27,11 +26,10 @@ interface AnalysisResult {
   security_checks: SecurityChecks;
 }
 
-export default function URLSpamDetection() {
+export default function PhishingLinkDetection() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
-  const { user } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,15 +52,6 @@ export default function URLSpamDetection() {
       if (res.ok) {
         const data = await res.json();
         setResult(data); // Store the response data
-
-        // Send data to backend to store in database
-        await fetch("/api/user/store-url-result", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ data, userId: user?._id }),
-        });
       } else {
         console.error("Failed to fetch:", res.status, res.statusText);
       }
@@ -79,10 +68,10 @@ export default function URLSpamDetection() {
         <Card className="max-w-2xl mx-auto">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold">
-              URL Spam Detection
+              Phishing Link Detection
             </CardTitle>
             <CardDescription>
-              Enter a URL to check for potential spam or malicious content
+              Enter a Link to check for potential spam or phishing content
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
@@ -90,7 +79,7 @@ export default function URLSpamDetection() {
               <div className="flex items-center space-x-2">
                 <Input
                   type="url"
-                  placeholder="Enter URL to analyze"
+                  placeholder="Enter a link to analyze"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   required
@@ -110,10 +99,23 @@ export default function URLSpamDetection() {
                 <p>
                   <strong>URL:</strong> {result.url}
                 </p>
-                <p>
-                  <strong>Risk Score:</strong> {result.risk_score}
-                </p>
-                <h4 className="font-semibold mt-2 mb-1">Security Checks:</h4>
+                <div className={`mt-2 p-3 rounded-md ${result.risk_score > 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                  {result.risk_score > 0 ? (
+                    <div className="flex items-center">
+                      <AlertTriangle className="h-5 w-5 mr-2" />
+                      <span>This link is potentially a phishing link.</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                      <span>This link appears to be safe.</span>
+                    </div>
+                  )}
+                  <p className="mt-1">
+                    <strong>Risk Score:</strong> {result.risk_score}
+                  </p>
+                </div>
+                <h4 className="font-semibold mt-4 mb-1">Security Checks:</h4>
                 <ul className="space-y-1">
                   {Object.entries(result.security_checks).map(
                     ([key, value]) => (
@@ -131,13 +133,15 @@ export default function URLSpamDetection() {
                   )}
                 </ul>
               </div>
-              <Link to={"/history"} className="w-fit flex mx-auto mt-2">See History</Link>
+              <Link to={"/history"} className="w-fit flex mx-auto mt-4 text-blue-600 hover:underline">
+                See History
+              </Link>
             </CardContent>
           )}
           <CardFooter className="text-sm text-muted-foreground text-center">
             <p>
-              Our advanced algorithms will scan the provided URL for potential
-              threats and spam indicators.
+              Our advanced algorithms will scan the provided link for potential
+              threats and phishing content.
             </p>
           </CardFooter>
         </Card>
