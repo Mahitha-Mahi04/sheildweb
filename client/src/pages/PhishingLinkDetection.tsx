@@ -38,7 +38,7 @@ export default function PhishingLinkDetection() {
       // Fetch from the third-party API
       const res = await fetch("/check-url", {
         headers: {
-          Authorization: "Bearer eFIAiHxPiZWxROQN7HI7gN7veZaEFd5PkUWxqyYX",
+          Authorization: "Bearer AZgWNHYj7i8lLns5EAWIx0PiHhJc2BF3mVascmkF",
           "Content-Type": "application/json",
           Accept: "application/json",
         },
